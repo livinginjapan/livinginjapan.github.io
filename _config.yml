@@ -19,7 +19,6 @@
 # in the templates via {{ site.myvariable }}.
 
 title: Software Engineer Living in Tokyo, Japan. 
-email: herkailin@gmail.com 
 description: >- # this means to ignore newlines until "baseurl:"
     Born in Singapore 🇸🇬, relocated to Tokyo, Japan 🇯🇵 in September 2019. <br>
     In the midst of learning C++ and trying to pick up Japanese. 
@@ -34,7 +33,8 @@ theme: jekyll-theme-hacker
 
 plugins:
   - jekyll-feed
-
+  - jekyll-paginate
+paginate: 5
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to
@@ -54,3 +54,4 @@ plugins:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
+excerpt_separator: <!--more-->
