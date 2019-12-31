@@ -1,0 +1,26 @@
+---
+layout: default
+slug:  "Bye 2019"
+date:   2019-12-31 11:49:19 +0800 //YYY--mm-dd
+permalink: /:year-:month-:day/:title
+is_post: true
+---
+This year was a <em>really, really,</em> wild ride. So many changes took place. My own personal development, doing things that I never thought I would be able to (conquering interviews), and also, the physical change - living abroad. January, I started out really strong in exercising. I maintained running at least 4 times a week for a month, meal prepped my own lunch. However, this did not last long, as I started prepping my resume, sending them out and practice technical questions.  <br><br>
+<!--more-->
+
+I sent out countless of resume to multiple companies, wrecked a few interviews, and got lucky with 2 companies. Will write a story on that in future. But the short version is, I leetcoded hard for 6 months. As evident from my github graph: 
+
+![My github contribution](/assets/github_contrib.png)
+(you could tell when I got hired into my new company 😛)
+
+I never thought I would be able to nail technical interviews,(i <strong> failed </strong> my basic programming class in year 1 during uni despite studying hard) but I did. It was a combination of hard work, smart work, persistence, and luck. Weekends were mostly at home studying, and after work, I try to complete 1 leetcode question a day. It was soooo damn tough. Job hunting is tough. I often beat myself up during that past 5-6 months. Crying, thinking of giving up happens so frequently. All credits to my boyfriend, who is also my fierce coach - for prepping me and giving me all the support and guidance I needed.
+
+In the end, it was a sweet ending, and i'm thankful. I got an offer from a big company, overseas. They flew me in for an interview and I took an extended trip with my mum after the interview. Happiness. My first overseas interview took place. <br><br>
+
+Accepted the job offer, and got sent to training in New York. It was an incredible experience. I was flown business class, stayed in a good hotel, and had my expenses paid for. I met really fun loving people in my training class too. Everything was so so so surreal. The only downside was,the time difference and long distance relationship sucks. so much. <br><br>
+
+After training, went back to Tokyo, stayed in an incredible service apartment temporarily while I did house hunting - which I didn't expect it to be so damn tough too. Houses can be different from pictures, and most importantly, Tokyo housing market get snaps up really fast on the good properties. Whats left over are usually the bad apples. Ultimately, we settled in a smaller apartment that was within our budget, but at a convenient location. <br><br>
+
+It was all fun and stuff, but of course, it is also so hard to just start out at a new job. I am under constant stress on learning and trying to give people good impression. Imposter syndrome definitely kicks in because everyone in the company is just so damn smart. There seems to be infinite amount of things to learn! <br><br>
+
+This is my ending of 2019. And now 2020 is here, I will have new set of goals,facing my existing challenges and embrace the upcoming ones. Bring it on! (It's the new year new hope vibes again lol.)
