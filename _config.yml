@@ -20,8 +20,10 @@
 
 title: Software Engineer Living in Tokyo, Japan. 
 description: >- # this means to ignore newlines until "baseurl:"
-    born in Singapore 🇸🇬, relocated to Tokyo, Japan 🇯🇵 in late 2019. <br>
-    semi-junior software engineer. 
+    👩🏻 K: born in Singapore 🇸🇬, relocated to Tokyo, Japan 🇯🇵 in late 2019. <br> 
+    semi-junior software engineer.  <br> <br>
+    👨🏽 M: born in Philippines 🇵🇭,  relocated to Tokyo, Japan 🇯🇵 in late 2019. <br>
+    not semi-junior software engineer. <br>
 baseurl: "/" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: jekyllrb

@@ -13,7 +13,7 @@ Happy New Year! Was watching Julie and Julia while on annual leave. It seems lik
 Therefore this year, in order to resolve my new year resolution, I'll try to break them down into smaller steps with a `deadline`. 
 <!--more-->
 
-My new year resolutions usually ends up pretty well, except for the fitness / lose weight part. I always keep my new year resolutions short. Approximately 3 per year. I can't multi task at all, which gives me a little problem with the fitness part. I tend to just focus on one thing a day and feel accomplished. For example, if I were to be running diligently, I'll not be coding diligently. But if I'm coding diligently, it means I won't go for a run. That is a huge problem with myself and I hope to tackle that this year. <br><br>
+My new year resolutions usually ends up pretty well, except for the fitness / lose weight part. I always keep my new year resolutions short. Approximately 3 per year. <br><br>
 
 I will keep my new year resolutions for myself, but I'll share the plans here for self-improvement. <br>
 

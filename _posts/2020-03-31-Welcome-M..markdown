@@ -1,0 +1,17 @@
+---
+layout: default
+slug:  "Welcome M."
+date:   2020-03-31 22:14:00 +0900 //YYY--mm-dd
+permalink: /:year-:month-:day/:title
+is_post: true
+---
+
+Hey all! 
+
+Let me introduce a new writer to this blog, M. He is a software engineer working in one of the FAANG company. 
+He is also the fierce coach I mentioned in [previous blogpost](. https://livinginjapan.github.io/2019-12-31/Bye-2019). 
+
+Look forward to his first post!
+
+Signing off, <br>
+K.
