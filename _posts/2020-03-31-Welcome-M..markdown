@@ -9,7 +9,7 @@ is_post: true
 Hey all! 
 
 Let me introduce a new writer to this blog, M. He is a software engineer working in one of the FAANG company. 
-He is also the fierce coach I mentioned in [previous blogpost](. https://livinginjapan.github.io/2019-12-31/Bye-2019). 
+He is also the fierce coach I mentioned in [previous blogpost](https://livinginjapan.github.io/2019-12-31/Bye-2019). 
 
 Look forward to his first post!
 

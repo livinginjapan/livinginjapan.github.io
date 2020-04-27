@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <script data-ad-client="ca-pub-7426973781899259" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Effective C++ Series(ii) | Software Engineer Living in Tokyo, Japan.</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Effective C++ Series(ii)" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Chapter 1, Item 5: Know what functions C++ silently write and calls. First and foremost, something that confuses the hell out of beginners / me are the C++ constructors. There are 3 different kind of constructors in C++. default constructor copy constructor copy assignment operator. So what are the differences between those 3?" />
+<meta property="og:description" content="Chapter 1, Item 5: Know what functions C++ silently write and calls. First and foremost, something that confuses the hell out of beginners / me are the C++ constructors. There are 3 different kind of constructors in C++. default constructor copy constructor copy assignment operator. So what are the differences between those 3?" />
+<link rel="canonical" href="http://localhost:4000/2020-03-28/Effective-C++-Series(ii)" />
+<meta property="og:url" content="http://localhost:4000/2020-03-28/Effective-C++-Series(ii)" />
+<meta property="og:site_name" content="Software Engineer Living in Tokyo, Japan." />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-03-28T22:38:00+09:00" />
+<script type="application/ld+json">
+{"description":"Chapter 1, Item 5: Know what functions C++ silently write and calls. First and foremost, something that confuses the hell out of beginners / me are the C++ constructors. There are 3 different kind of constructors in C++. default constructor copy constructor copy assignment operator. So what are the differences between those 3?","@type":"BlogPosting","url":"http://localhost:4000/2020-03-28/Effective-C++-Series(ii)","headline":"Effective C++ Series(ii)","dateModified":"2020-03-28T22:38:00+09:00","datePublished":"2020-03-28T22:38:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020-03-28/Effective-C++-Series(ii)"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a class="remove_underscore" href="/"><h1>Software Engineer Living in Tokyo, Japan.</h1></a>
+        <h2>👩🏻 K: born in Singapore 🇸🇬, relocated to Tokyo, Japan 🇯🇵 in late 2019. <br>  semi-junior software engineer.  <br> <br> 👨🏽 M: born in Philippines 🇵🇭,  relocated to Tokyo, Japan 🇯🇵 in late 2019. <br> not semi-junior software engineer. <br></h2>
+        📝: <a class="remove_underscore" href = "mailto:reachout.sgjp@gmail.com"> 📮  </a> \
+            <a class="remove_underscore" href = "https://ask.fm/reachoutsgjp"> ❓   </a>
+        
+        <!-- <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section> -->
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        
+        <h2><span class="main_content"> 28 Mar 2020 </span> &raquo; <a href="/2020-03-28/Effective-C++-Series(ii)">Effective C++ Series(ii)</a></h2>
+        
+
+        <p>Chapter 1, Item 5: <strong>Know what functions C++ silently write and calls.</strong> <br />
+First and foremost, something that confuses the hell out of beginners / me are the C++ constructors. There are 3 different kind of constructors in C++.</p>
+<ol>
+  <li>default constructor</li>
+  <li>copy constructor</li>
+  <li>copy assignment operator.</li>
+</ol>
+
+<p>So what are the differences between those 3? 
+<!--more-->
+Writing a simple C++ Program can tell you so:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+</span><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="n">A</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"default constructor</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">A</span><span class="p">(</span><span class="k">const</span> <span class="n">A</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"copy constructor</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">A</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span> <span class="p">(</span><span class="k">const</span> <span class="n">A</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span><span class="s">"assignment</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+  <span class="n">A</span> <span class="n">a</span><span class="p">;</span>      <span class="c1">//default constructor </span>
+  <span class="n">A</span> <span class="n">b</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>   <span class="c1">//copy constructor</span>
+  <span class="n">A</span> <span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>  <span class="c1">//copy constructor</span>
+  <span class="n">A</span> <span class="n">d</span><span class="p">;</span>      <span class="c1">//default constructor</span>
+  <span class="n">d</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>    <span class="c1">//assignment constructor </span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>So, if we were to declare an empty class, i.e. 
+class A {};</p>
+
+<p>It is essetiantally the same as follows:</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="n">A</span><span class="p">()</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+    <span class="n">A</span><span class="p">(</span><span class="k">const</span> <span class="n">A</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+    <span class="o">~</span><span class="n">A</span><span class="p">()</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+    <span class="n">A</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">A</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This is what C++ compiler will generate for you. Also, it is only generated when needed (when you invoke them). 
+However, as long as you declare a <em>type</em> of constructor, compilers won’t generate it anymore. For example:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="n">A</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">,</span> <span class="n">T</span> <span class="n">val</span><span class="p">);</span>
+
+  <span class="nl">private:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name_</span><span class="p">;</span>
+    <span class="n">T</span> <span class="n">objectVal_</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="n">A</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">A</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">,</span> <span class="n">T</span> <span class="n">val</span><span class="p">)</span>
+  <span class="o">:</span><span class="n">name_</span><span class="p">(</span><span class="n">name</span><span class="p">),</span>
+  <span class="n">objectVal_</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+  <span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"default constructor</span><span class="se">\n</span><span class="s">"</span><span class="p">;};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// A&lt;int&gt; a; // this will now fail!	</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">(</span><span class="s">"Mike"</span><span class="p">);</span>
+  <span class="n">A</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">//calls default constructor</span>
+  <span class="n">A</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">(</span><span class="n">a</span><span class="p">);</span> <span class="c1">//compiler generates this copy constructor </span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>we tried copying from object <code class="highlighter-rouge">a to b</code> this can happen even if we did not specify the copy constructor as compiler will generate one for you.
+since we tried copying a.name_ to b.name_, it will use the string copy constructor, and we specified int on objectVal_ so it will initialize by copying bits to b.objectVal_.</p>
+
+<p>That’s all for today chapter in learning what the compiler generates for you.</p>
+
+<p>See ya!</p>
+
+<ul>
+  <li>K.</li>
+</ul>
+
+      </section>
+    </div>
+
+    
+  </body>
+</html>

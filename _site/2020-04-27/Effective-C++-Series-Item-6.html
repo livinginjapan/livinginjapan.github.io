@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <script data-ad-client="ca-pub-7426973781899259" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Effective C++ Series Item 6 | Software Engineer Living in Tokyo, Japan.</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Effective C++ Series Item 6" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Chapter 1, Item 6: Explicitly Disallow the User of Compiler-Generated Functions you do not want. From the previous chapter, you’ll know that C++ auto generates constructors when you don’t declare it. However, what happens if you want to create unique objects? Read on to find out more." />
+<meta property="og:description" content="Chapter 1, Item 6: Explicitly Disallow the User of Compiler-Generated Functions you do not want. From the previous chapter, you’ll know that C++ auto generates constructors when you don’t declare it. However, what happens if you want to create unique objects? Read on to find out more." />
+<link rel="canonical" href="http://localhost:4000/2020-04-27/Effective-C++-Series-Item-6" />
+<meta property="og:url" content="http://localhost:4000/2020-04-27/Effective-C++-Series-Item-6" />
+<meta property="og:site_name" content="Software Engineer Living in Tokyo, Japan." />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-27T21:21:00+09:00" />
+<script type="application/ld+json">
+{"description":"Chapter 1, Item 6: Explicitly Disallow the User of Compiler-Generated Functions you do not want. From the previous chapter, you’ll know that C++ auto generates constructors when you don’t declare it. However, what happens if you want to create unique objects? Read on to find out more.","@type":"BlogPosting","url":"http://localhost:4000/2020-04-27/Effective-C++-Series-Item-6","headline":"Effective C++ Series Item 6","dateModified":"2020-04-27T21:21:00+09:00","datePublished":"2020-04-27T21:21:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020-04-27/Effective-C++-Series-Item-6"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a class="remove_underscore" href="/"><h1>Software Engineer Living in Tokyo, Japan.</h1></a>
+        <h2>👩🏻 K: born in Singapore 🇸🇬, relocated to Tokyo, Japan 🇯🇵 in late 2019. <br>  semi-junior software engineer.  <br> <br> 👨🏽 M: born in Philippines 🇵🇭,  relocated to Tokyo, Japan 🇯🇵 in late 2019. <br> not semi-junior software engineer. <br></h2>
+        📝: <a class="remove_underscore" href = "mailto:reachout.sgjp@gmail.com"> 📮  </a> \
+            <a class="remove_underscore" href = "https://ask.fm/reachoutsgjp"> ❓   </a>
+        
+        <!-- <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section> -->
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        
+        <h2><span class="main_content"> 27 Apr 2020 </span> &raquo; <a href="/2020-04-27/Effective-C++-Series-Item-6">Effective C++ Series Item 6</a></h2>
+        
+
+        <p>Chapter 1, Item 6: Explicitly Disallow the User of Compiler-Generated Functions you do not want.
+From the previous chapter, you’ll know that C++ auto generates constructors when you don’t declare it.</p>
+
+<p>However, what happens if you want to create unique objects? Read on to find out more.</p>
+
+<!--more-->
+
+<p>For Example:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">HomeForSale</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">HomeForSale</span> <span class="n">h1</span><span class="p">;</span>
+  <span class="n">HomeForSale</span> <span class="n">h2</span><span class="p">;</span>
+
+  <span class="n">h1</span> <span class="o">=</span> <span class="n">h2</span><span class="p">;</span> <span class="c1">//attempting to copy h2 into h1</span>
+
+  <span class="n">HomeForSale</span> <span class="n">h3</span><span class="p">(</span><span class="n">h1</span><span class="p">);</span> <span class="c1">//attempting to copy h1 to h3</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The above copy code dosen’t make sense right? Because 2 houses shouldn’t be exactly the same. 
+How can we prevent that? In normal circumstances, if we do not want something, we simply do not code it out. However, as mention in <a href="https://livinginjapan.github.io/2020-03-28/Effective-C++-Series(ii)">earlier blogpost</a>, if you don’t declare, and somebody tries to call, the compiler will declare it for you.</p>
+
+<p>How can we prevent other classes from calling a copy constructor / assignment operator?<br />
+Answer: <code class="highlighter-rouge">just declare them private.</code></p>
+<ol>
+  <li>declaring prevent compiler generating its own function</li>
+  <li>setting it private keep people from calling it.</li>
+</ol>
+
+<p>It’s not entirely foolproof though. A member / friend function can still call a private function:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">class</span> <span class="nc">A</span> 
+<span class="p">{</span>
+  <span class="nl">private:</span>
+    <span class="kt">void</span> <span class="n">foo</span><span class="p">()</span> <span class="p">{}</span>
+
+  <span class="nl">public:</span> 
+    <span class="kt">void</span> <span class="n">cat</span><span class="p">()</span> <span class="p">{}</span>
+
+  <span class="k">friend</span> <span class="kt">void</span> <span class="n">bar</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="n">A</span><span class="o">::</span><span class="n">cat</span><span class="p">(){</span>
+  <span class="n">foo</span><span class="p">();</span> <span class="c1">//calling foo()</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">bar</span><span class="p">(){</span>
+  <span class="n">A</span> <span class="n">a</span><span class="p">;</span>
+  <span class="n">a</span><span class="p">.</span><span class="n">foo</span><span class="p">();</span> <span class="c1">//calling foo again noooo!!!!!!!</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>the trick is to not define the function so that they’ll get error at link-time. This is a well established trick where lots of C++ iostreams are using it like this.</p>
+
+<p>So the final code should look like this:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">HomeForSale</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="p">...</span>
+  <span class="nl">private:</span>
+    <span class="n">HomeForSale</span><span class="p">(</span><span class="k">const</span> <span class="n">HomeForSale</span><span class="o">&amp;</span><span class="p">);</span> <span class="c1">//declarations only. </span>
+    <span class="n">HomeForSale</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">HomeForSale</span><span class="o">&amp;</span><span class="p">);</span>
+
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Note: common convention is that you can omit function parameters if you are not using it. 
+To optimise it by failing at compile time, declare the copy constructor and copy assignment operator private not in HomeForSale class but base class.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Uncopyable</span> <span class="p">{</span>
+<span class="nl">protected:</span>                                   <span class="c1">// allow construction</span>
+  <span class="n">Uncopyable</span><span class="p">()</span> <span class="p">{}</span>                            <span class="c1">// and destruction of</span>
+  <span class="o">~</span><span class="n">Uncopyable</span><span class="p">()</span> <span class="p">{}</span>                           <span class="c1">// derived objects...</span>
+
+<span class="nl">private:</span>
+  <span class="n">Uncopyable</span><span class="p">(</span><span class="k">const</span> <span class="n">Uncopyable</span><span class="o">&amp;</span><span class="p">);</span>             <span class="c1">// ...but prevent copying</span>
+  <span class="n">Uncopyable</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Uncopyable</span><span class="o">&amp;</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>and now HomeForSale can inherit from Uncopyable</p>
+
+<p>```
+class HomeForSale : private Uncopyable {
+  ….
+};</p>
+
+<p>when compiler try to generate a copy constructor / copy assignment operator, if anybody tries to call it, it will try to call the base class and it will fail because it is private.</p>
+
+<p>C++ is so.. smart  yet frustrating at the same time.</p>
+
+<p>Ok thats all for today’s learning!</p>
+
+<ul>
+  <li>K.</li>
+</ul>
+
+      </section>
+    </div>
+
+    
+  </body>
+</html>
