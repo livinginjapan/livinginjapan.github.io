@@ -5,7 +5,7 @@ date:   2020-04-27 21:21:00 +0900 //YYY--mm-dd
 permalink: /:year-:month-:day/:title
 is_post: true
 ---
-Chapter 1, Item 6: Explicitly Disallow the User of Compiler-Generated Functions you do not want.
+Chapter 1, Item 6: Explicitly Disallow the User of Compiler-Generated Functions you do not want. <br>
 From the previous chapter, you'll know that C++ auto generates constructors when you don't declare it. 
 
 However, what happens if you want to create unique objects? Read on to find out more. 
