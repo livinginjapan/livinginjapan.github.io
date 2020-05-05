@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <script data-ad-client="ca-pub-7426973781899259" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Effective C++ Series Item 9 | Software Engineer Living in Tokyo, Japan.</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Effective C++ Series Item 9" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Chapter 1, Item 9: Never call virtual functions during construction or destruction. it will likely not do what you expected." />
+<meta property="og:description" content="Chapter 1, Item 9: Never call virtual functions during construction or destruction. it will likely not do what you expected." />
+<link rel="canonical" href="http://localhost:4000/2020-05-05/Effective-C++-Series-Item-9" />
+<meta property="og:url" content="http://localhost:4000/2020-05-05/Effective-C++-Series-Item-9" />
+<meta property="og:site_name" content="Software Engineer Living in Tokyo, Japan." />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-05-05T16:30:00+09:00" />
+<script type="application/ld+json">
+{"description":"Chapter 1, Item 9: Never call virtual functions during construction or destruction. it will likely not do what you expected.","@type":"BlogPosting","url":"http://localhost:4000/2020-05-05/Effective-C++-Series-Item-9","headline":"Effective C++ Series Item 9","dateModified":"2020-05-05T16:30:00+09:00","datePublished":"2020-05-05T16:30:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020-05-05/Effective-C++-Series-Item-9"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a class="remove_underscore" href="/"><h1>Software Engineer Living in Tokyo, Japan.</h1></a>
+        <h2>👩🏻 K: born in Singapore 🇸🇬, relocated to Tokyo, Japan 🇯🇵 in late 2019. <br>  semi-junior software engineer.  <br> <br> 👨🏽 M: born in Philippines 🇵🇭,  relocated to Tokyo, Japan 🇯🇵 in late 2019. <br> not semi-junior software engineer. <br></h2>
+        📝: <a class="remove_underscore" href = "mailto:reachout.sgjp@gmail.com"> 📮  </a> \
+            <a class="remove_underscore" href = "https://ask.fm/reachoutsgjp"> ❓   </a>
+        
+        <!-- <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section> -->
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        
+        <h2><span class="main_content"> 05 May 2020 </span> &raquo; <a href="/2020-05-05/Effective-C++-Series-Item-9">Effective C++ Series Item 9</a></h2>
+        
+
+        <p>Chapter 1, Item 9: Never call virtual functions during construction or destruction. <br />
+it will likely not do what you expected.</p>
+
+<!--more-->
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">class</span> <span class="nc">Transaction</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="n">Transaction</span><span class="p">();</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">logTransaction</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">//pure virtual ctor</span>
+<span class="p">};</span>
+
+<span class="n">Transaction</span><span class="o">::</span><span class="n">Transaction</span><span class="p">()</span> <span class="p">{</span>
+  <span class="p">...</span> <span class="c1">//do something</span>
+  <span class="n">logTransaction</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">BuyTransaction</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Transaction</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="n">BuyTransaction</span><span class="p">();</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">logTransaction</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">SellTransaction</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Transaction</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="n">SellTransaction</span><span class="p">();</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">logTransaction</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>with that sample code above, let’s begin with:
+<code class="highlighter-rouge">BuyTransaction b;</code></p>
+
+<p>What is going to happen?</p>
+<ol>
+  <li><code class="highlighter-rouge">Transaction</code> constructor will first be called</li>
+  <li><code class="highlighter-rouge">BuyTransaction</code> constructor will then be called</li>
+</ol>
+
+<p>Based class parts are first constructed before derived class parts. I think you might be getting some gist of it now.</p>
+
+<p>If you were to take a look at <code class="highlighter-rouge">Transaction Constructor</code>, the last line calls virtual function <code class="highlighter-rouge">logTransaction</code>, which <code class="highlighter-rouge">logTransaction()</code> is it going to get called?</p>
+
+<p>Here is the problem: <b>during base class construction, virtual functions never go down into derived classes. </b>  Hence, derived class data memeber have not initialized when base class constructor run. Some co,pilers will issue a warning, some don’t.</p>
+
+<p>The same goes for destructor, the derived class destructor will run first and then the base class destructor.</p>
+
+<p>How can we ensure that proper version of logTransaction is called each time an object in the <code class="highlighter-rouge">Transaction</code> hierachy is created?</p>
+
+<p>answer: make logTransaction into non-virtual function in Transaction then require the derived class constructor pass the necessary log information to the Transaction constructor. Example:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Tranaction</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="k">explicit</span> <span class="n">Transaction</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">&amp;</span> <span class="n">logInfo</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="n">logTransaction</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">logInfo</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">//non virtual</span>
+
+<span class="p">};</span>
+
+<span class="n">Transaction</span><span class="o">::</span><span class="n">Transaction</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">logInfo</span><span class="p">){</span>
+  <span class="n">logTransaction</span><span class="p">(</span><span class="n">logInfo</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">BuyTransaction</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Transaction</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="n">BuyTransaction</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+    <span class="o">:</span> <span class="n">Transaction</span><span class="p">(</span><span class="n">createLogString</span><span class="p">(</span><span class="n">parameters</span><span class="p">))</span>
+    <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+
+  <span class="nl">private:</span>
+    <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">createLogString</span><span class="p">(</span><span class="n">parameters</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Since you can’t use virtual function to call down from base classes during construction, you can compensate by having derived class pass necessary information up to base class constructor.</p>
+<ul>
+  <li>K.</li>
+</ul>
+
+      </section>
+    </div>
+
+    
+  </body>
+</html>

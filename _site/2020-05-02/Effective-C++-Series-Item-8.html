@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <script data-ad-client="ca-pub-7426973781899259" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Effective C++ Series Item 8 | Software Engineer Living in Tokyo, Japan.</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Effective C++ Series Item 8" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Chapter 1, Item 8: Prevent exceptions from leaving destructors. C++ dosen’t prohibit destructors from emitting exceptions, but it discourages the use of it - why?" />
+<meta property="og:description" content="Chapter 1, Item 8: Prevent exceptions from leaving destructors. C++ dosen’t prohibit destructors from emitting exceptions, but it discourages the use of it - why?" />
+<link rel="canonical" href="http://localhost:4000/2020-05-02/Effective-C++-Series-Item-8" />
+<meta property="og:url" content="http://localhost:4000/2020-05-02/Effective-C++-Series-Item-8" />
+<meta property="og:site_name" content="Software Engineer Living in Tokyo, Japan." />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-05-02T20:35:00+09:00" />
+<script type="application/ld+json">
+{"description":"Chapter 1, Item 8: Prevent exceptions from leaving destructors. C++ dosen’t prohibit destructors from emitting exceptions, but it discourages the use of it - why?","@type":"BlogPosting","url":"http://localhost:4000/2020-05-02/Effective-C++-Series-Item-8","headline":"Effective C++ Series Item 8","dateModified":"2020-05-02T20:35:00+09:00","datePublished":"2020-05-02T20:35:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020-05-02/Effective-C++-Series-Item-8"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a class="remove_underscore" href="/"><h1>Software Engineer Living in Tokyo, Japan.</h1></a>
+        <h2>👩🏻 K: born in Singapore 🇸🇬, relocated to Tokyo, Japan 🇯🇵 in late 2019. <br>  semi-junior software engineer.  <br> <br> 👨🏽 M: born in Philippines 🇵🇭,  relocated to Tokyo, Japan 🇯🇵 in late 2019. <br> not semi-junior software engineer. <br></h2>
+        📝: <a class="remove_underscore" href = "mailto:reachout.sgjp@gmail.com"> 📮  </a> \
+            <a class="remove_underscore" href = "https://ask.fm/reachoutsgjp"> ❓   </a>
+        
+        <!-- <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section> -->
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        
+        <h2><span class="main_content"> 02 May 2020 </span> &raquo; <a href="/2020-05-02/Effective-C++-Series-Item-8">Effective C++ Series Item 8</a></h2>
+        
+
+        <p>Chapter 1, Item 8: Prevent exceptions from leaving destructors. <br /></p>
+
+<p>C++ dosen’t prohibit destructors from emitting exceptions, but it discourages the use of it - why? 
+<!--more--></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="o">~</span><span class="n">Widget</span><span class="p">()</span> <span class="p">{....</span> <span class="p">};</span> <span class="c1">//assume it throws an exception</span>
+
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="nf">doSomething</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+  <span class="p">...</span> 
+<span class="p">}</span> <span class="c1">//v is automatically destroyed here</span>
+</code></pre></div></div>
+
+<p>when V is destroyed, it is responsible for destroying all Widget objects in v, but say the first object went in the destructor and it threw an exception, the other 9 has to be destroyed too otherwise resource will leak. assuming second widget throws an exception again, so now there are two exceptions thrown which is too many for C++ - program will terminate or yield undefined behaviour. Any standard library (list, set) or containers / arrays will result in same behaviour. So try to avoid it.</p>
+
+<p>But what should you do if you need destructor to perform an operation that may fail by throwing exception?</p>
+
+<p>you can pass the ownership to the caller by providing a regular function (non virtual) for it.</p>
+
+<ul>
+  <li>K.</li>
+</ul>
+
+      </section>
+    </div>
+
+    
+  </body>
+</html>

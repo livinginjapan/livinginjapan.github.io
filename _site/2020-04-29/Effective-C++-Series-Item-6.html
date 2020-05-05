@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <script data-ad-client="ca-pub-7426973781899259" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Effective C++ Series Item 7 | Software Engineer Living in Tokyo, Japan.</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Effective C++ Series Item 7" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Chapter 1, Item 7: Declare destructors virtual in polymorphic base classes. I’ve seen so many virtual keyword in c++ which you don’t quite see in other languages. So what is virtual ?" />
+<meta property="og:description" content="Chapter 1, Item 7: Declare destructors virtual in polymorphic base classes. I’ve seen so many virtual keyword in c++ which you don’t quite see in other languages. So what is virtual ?" />
+<link rel="canonical" href="http://localhost:4000/2020-04-29/Effective-C++-Series-Item-6" />
+<meta property="og:url" content="http://localhost:4000/2020-04-29/Effective-C++-Series-Item-6" />
+<meta property="og:site_name" content="Software Engineer Living in Tokyo, Japan." />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-29T15:35:00+09:00" />
+<script type="application/ld+json">
+{"description":"Chapter 1, Item 7: Declare destructors virtual in polymorphic base classes. I’ve seen so many virtual keyword in c++ which you don’t quite see in other languages. So what is virtual ?","@type":"BlogPosting","url":"http://localhost:4000/2020-04-29/Effective-C++-Series-Item-6","headline":"Effective C++ Series Item 7","dateModified":"2020-04-29T15:35:00+09:00","datePublished":"2020-04-29T15:35:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020-04-29/Effective-C++-Series-Item-6"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a class="remove_underscore" href="/"><h1>Software Engineer Living in Tokyo, Japan.</h1></a>
+        <h2>👩🏻 K: born in Singapore 🇸🇬, relocated to Tokyo, Japan 🇯🇵 in late 2019. <br>  semi-junior software engineer.  <br> <br> 👨🏽 M: born in Philippines 🇵🇭,  relocated to Tokyo, Japan 🇯🇵 in late 2019. <br> not semi-junior software engineer. <br></h2>
+        📝: <a class="remove_underscore" href = "mailto:reachout.sgjp@gmail.com"> 📮  </a> \
+            <a class="remove_underscore" href = "https://ask.fm/reachoutsgjp"> ❓   </a>
+        
+        <!-- <section id="downloads">
+          
+          <a href="" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section> -->
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        
+        <h2><span class="main_content"> 29 Apr 2020 </span> &raquo; <a href="/2020-04-29/Effective-C++-Series-Item-6">Effective C++ Series Item 7</a></h2>
+        
+
+        <p>Chapter 1, Item 7: Declare destructors virtual in polymorphic base classes. <br /></p>
+
+<p>I’ve seen so many virtual keyword in c++ which you don’t quite see in other languages. So what is <code class="highlighter-rouge">virtual</code> ? 
+<!--more--></p>
+
+<p>The chapter begins with going straight into an example of polymorphism. They used TimeKeeper as a base class which has derived classes with different approaches to time keeping.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">class</span> <span class="nc">TimeKeeper</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="n">TimeKeeper</span><span class="p">();</span>
+    <span class="o">~</span><span class="n">TimeKeeper</span><span class="p">();</span> <span class="c1">//destructor if you don't already know</span>
+
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">AtomicClock</span> <span class="o">:</span> <span class="k">public</span> <span class="n">TimeKeeper</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+<span class="k">class</span> <span class="nc">WaterClock</span> <span class="o">:</span> <span class="k">public</span> <span class="n">TimeKeeper</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+<span class="k">class</span> <span class="nc">WristWatch</span> <span class="o">:</span> <span class="k">public</span> <span class="n">TimeKeeper</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+</code></pre></div></div>
+
+<p>Many clients will want to access time without knowing the details on how it’s calculated. i.e. <code class="highlighter-rouge">factory function</code>.</p>
+
+<p>define factory function:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A function that returns base class pointer to a newly created derived class object 
+</code></pre></div></div>
+
+<p>Example:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TimeKeeper</span> <span class="o">*</span><span class="n">ptk</span> <span class="o">=</span> <span class="n">getTimeKeeper</span><span class="p">();</span> <span class="c1">//dynamically allocated object, on the heap, from TimeKeeper hierachy </span>
+
+<span class="c1">//use ptk here</span>
+
+<span class="k">delete</span> <span class="n">ptk</span><span class="p">;</span> <span class="c1">//release to avoid resource leak </span>
+</code></pre></div></div>
+
+<p>So the idea of factory function is that getTimeKeeper returns a pointer to a derived class object, for example AtomicClock.</p>
+
+<p>Now, the problem is that getTimeKeeper returns a pointer to a derived class (AtomicClock) that object is being deleted via a base class pointer. a TimeKeeper* pointer, and the base class a non virtual destructor. =&gt; DISASTER.</p>
+
+<p>because C++ specifies that when a derived class object is deleted through a pointer to a base with a non virtual destructor, results are undefined. Usually, the derived part of the object never gets destroyed. i.e. AtomicClock object is not destroyed and destructor would not be run. However, the base class part (TimeKeeper part) would be destroyed, leading to a curious “partially destroyed” object. Excellent way to <b> leak resource </b>, corrupt data structure &amp; spend a lot of time with debuggers.</p>
+
+<p>To fix the problem: 
+give the base class a virtual destructor. then deleteing the derived class object will be what you want. it will delete entire object with its derived class parts.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">TimeKeeper</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="n">TimeKeeper</span><span class="p">();</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">TimeKeeper</span><span class="p">();</span> <span class="c1">//note virtual keyword here</span>
+<span class="p">}</span>
+
+<span class="n">TimeKeeper</span> <span class="o">*</span><span class="n">ptk</span> <span class="o">=</span> <span class="n">getTimeKeeper</span><span class="p">();</span>
+
+<span class="p">...</span>
+
+<span class="k">delete</span> <span class="n">ptk</span><span class="p">;</span> <span class="c1">//behaves correctly now</span>
+</code></pre></div></div>
+
+<p>Base classes like TimeKeeper generally contain virtual functions other than destructor, because purpose of virtual function to allow customization of derived class implementation.</p>
+
+<p>If a base class does not contain virtual function, often indicates it is not meant to be used as a bsae class.  If a class is not intended to be base class, making the destructor virtual is usually a bad idea.</p>
+
+<p>Example:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Point</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="n">Point</span><span class="p">(</span><span class="kt">int</span> <span class="n">xCoord</span><span class="p">,</span> <span class="kt">int</span> <span class="n">yCoord</span><span class="p">);</span>
+    <span class="o">~</span><span class="n">Point</span><span class="p">();</span>
+
+  <span class="nl">private:</span>
+    <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>if an int occupies 32 bit, Point object can typically fit into a 64 bit register. Point object can be passed as a 64 bit quantity. If Point destructor is virtual, situation changes. 
+Object of that that will increase in size, on a 32-bit architecture, they’ll go from 64bit ( for the 2 ints) to 96 bit ( ints + virtual pointer) virtual pointer is to determine which virtual function should invoke on the object. on a 64 bit architecture, they may go to 128 bit because pointers are 64 bits in size on such architecture. Adding a vptr to Point will increase 50-100%. Where Point can no longer fit 64 bit register.</p>
+
+<p>Hence, it is gratuitiously declaring all destructors virtual is just as wrong as never declaring them virtual.</p>
+
+<p>One good rule of thumb:
+<code class="highlighter-rouge">Declare a virtual destructor only if you have at least one virtual function.</code></p>
+
+<ul>
+  <li>K.</li>
+</ul>
+
+      </section>
+    </div>
+
+    
+  </body>
+</html>

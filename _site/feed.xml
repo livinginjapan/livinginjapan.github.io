@@ -1,4 +1,189 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.6">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-04-27T22:12:43+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Software Engineer Living in Tokyo, Japan.</title><subtitle>👩🏻 K: born in Singapore 🇸🇬, relocated to Tokyo, Japan 🇯🇵 in late 2019. &lt;br&gt;  semi-junior software engineer.  &lt;br&gt; &lt;br&gt; 👨🏽 M: born in Philippines 🇵🇭,  relocated to Tokyo, Japan 🇯🇵 in late 2019. &lt;br&gt; not semi-junior software engineer. &lt;br&gt;</subtitle><entry><title type="html">Effective C++ Series Item 6</title><link href="http://localhost:4000/2020-04-27/Effective-C++-Series-Item-6" rel="alternate" type="text/html" title="Effective C++ Series Item 6" /><published>2020-04-27T21:21:00+09:00</published><updated>2020-04-27T21:21:00+09:00</updated><id>http://localhost:4000/2020-04-27/Effective%20C++%20Series%20Item%206</id><content type="html" xml:base="http://localhost:4000/2020-04-27/Effective-C++-Series-Item-6">&lt;p&gt;Chapter 1, Item 6: Explicitly Disallow the User of Compiler-Generated Functions you do not want.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.6">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-05-05T17:51:38+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Software Engineer Living in Tokyo, Japan.</title><subtitle>👩🏻 K: born in Singapore 🇸🇬, relocated to Tokyo, Japan 🇯🇵 in late 2019. &lt;br&gt;  semi-junior software engineer.  &lt;br&gt; &lt;br&gt; 👨🏽 M: born in Philippines 🇵🇭,  relocated to Tokyo, Japan 🇯🇵 in late 2019. &lt;br&gt; not semi-junior software engineer. &lt;br&gt;</subtitle><entry><title type="html">Effective C++ Series Item 9</title><link href="http://localhost:4000/2020-05-05/Effective-C++-Series-Item-9" rel="alternate" type="text/html" title="Effective C++ Series Item 9" /><published>2020-05-05T16:30:00+09:00</published><updated>2020-05-05T16:30:00+09:00</updated><id>http://localhost:4000/2020-05-05/Effective%20C++%20Series%20Item%209</id><content type="html" xml:base="http://localhost:4000/2020-05-05/Effective-C++-Series-Item-9">&lt;p&gt;Chapter 1, Item 9: Never call virtual functions during construction or destruction. &lt;br /&gt;
+it will likely not do what you expected.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Transaction&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nl&quot;&gt;public:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Transaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;virtual&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logTransaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//pure virtual ctor&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;Transaction&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Transaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//do something&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;logTransaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;BuyTransaction&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Transaction&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nl&quot;&gt;public:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;BuyTransaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;virtual&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logTransaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SellTransaction&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Transaction&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nl&quot;&gt;public:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;SellTransaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;virtual&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logTransaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;with that sample code above, let’s begin with:
+&lt;code class=&quot;highlighter-rouge&quot;&gt;BuyTransaction b;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;What is going to happen?&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Transaction&lt;/code&gt; constructor will first be called&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;BuyTransaction&lt;/code&gt; constructor will then be called&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Based class parts are first constructed before derived class parts. I think you might be getting some gist of it now.&lt;/p&gt;
+
+&lt;p&gt;If you were to take a look at &lt;code class=&quot;highlighter-rouge&quot;&gt;Transaction Constructor&lt;/code&gt;, the last line calls virtual function &lt;code class=&quot;highlighter-rouge&quot;&gt;logTransaction&lt;/code&gt;, which &lt;code class=&quot;highlighter-rouge&quot;&gt;logTransaction()&lt;/code&gt; is it going to get called?&lt;/p&gt;
+
+&lt;p&gt;Here is the problem: &lt;b&gt;during base class construction, virtual functions never go down into derived classes. &lt;/b&gt;  Hence, derived class data memeber have not initialized when base class constructor run. Some co,pilers will issue a warning, some don’t.&lt;/p&gt;
+
+&lt;p&gt;The same goes for destructor, the derived class destructor will run first and then the base class destructor.&lt;/p&gt;
+
+&lt;p&gt;How can we ensure that proper version of logTransaction is called each time an object in the &lt;code class=&quot;highlighter-rouge&quot;&gt;Transaction&lt;/code&gt; hierachy is created?&lt;/p&gt;
+
+&lt;p&gt;answer: make logTransaction into non-virtual function in Transaction then require the derived class constructor pass the necessary log information to the Transaction constructor. Example:&lt;/p&gt;
+
+&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Tranaction&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nl&quot;&gt;public:&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;explicit&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Transaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logTransaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//non virtual&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;Transaction&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Transaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;logTransaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;BuyTransaction&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Transaction&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nl&quot;&gt;public:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;BuyTransaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parameters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Transaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;createLogString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parameters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;nl&quot;&gt;private:&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;createLogString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parameters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Since you can’t use virtual function to call down from base classes during construction, you can compensate by having derived class pass necessary information up to base class constructor.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;K.&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">Chapter 1, Item 9: Never call virtual functions during construction or destruction. it will likely not do what you expected.</summary></entry><entry><title type="html">Effective C++ Series Item 8</title><link href="http://localhost:4000/2020-05-02/Effective-C++-Series-Item-8" rel="alternate" type="text/html" title="Effective C++ Series Item 8" /><published>2020-05-02T20:35:00+09:00</published><updated>2020-05-02T20:35:00+09:00</updated><id>http://localhost:4000/2020-05-02/Effective%20C++%20Series%20Item%208</id><content type="html" xml:base="http://localhost:4000/2020-05-02/Effective-C++-Series-Item-8">&lt;p&gt;Chapter 1, Item 8: Prevent exceptions from leaving destructors. &lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;C++ dosen’t prohibit destructors from emitting exceptions, but it discourages the use of it - why? 
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Widget&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nl&quot;&gt;public:&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Widget&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{....&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//assume it throws an exception&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;doSomething&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Widget&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt; 
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//v is automatically destroyed here&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;when V is destroyed, it is responsible for destroying all Widget objects in v, but say the first object went in the destructor and it threw an exception, the other 9 has to be destroyed too otherwise resource will leak. assuming second widget throws an exception again, so now there are two exceptions thrown which is too many for C++ - program will terminate or yield undefined behaviour. Any standard library (list, set) or containers / arrays will result in same behaviour. So try to avoid it.&lt;/p&gt;
+
+&lt;p&gt;But what should you do if you need destructor to perform an operation that may fail by throwing exception?&lt;/p&gt;
+
+&lt;p&gt;you can pass the ownership to the caller by providing a regular function (non virtual) for it.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;K.&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">Chapter 1, Item 8: Prevent exceptions from leaving destructors. C++ dosen’t prohibit destructors from emitting exceptions, but it discourages the use of it - why?</summary></entry><entry><title type="html">Effective C++ Series Item 7</title><link href="http://localhost:4000/2020-04-29/Effective-C++-Series-Item-6" rel="alternate" type="text/html" title="Effective C++ Series Item 7" /><published>2020-04-29T15:35:00+09:00</published><updated>2020-04-29T15:35:00+09:00</updated><id>http://localhost:4000/2020-04-29/Effective%20C++%20Series%20Item%206</id><content type="html" xml:base="http://localhost:4000/2020-04-29/Effective-C++-Series-Item-6">&lt;p&gt;Chapter 1, Item 7: Declare destructors virtual in polymorphic base classes. &lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;I’ve seen so many virtual keyword in c++ which you don’t quite see in other languages. So what is &lt;code class=&quot;highlighter-rouge&quot;&gt;virtual&lt;/code&gt; ? 
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;p&gt;The chapter begins with going straight into an example of polymorphism. They used TimeKeeper as a base class which has derived classes with different approaches to time keeping.&lt;/p&gt;
+
+&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TimeKeeper&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nl&quot;&gt;public:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;TimeKeeper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TimeKeeper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//destructor if you don't already know&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;AtomicClock&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TimeKeeper&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;WaterClock&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TimeKeeper&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;WristWatch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TimeKeeper&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Many clients will want to access time without knowing the details on how it’s calculated. i.e. &lt;code class=&quot;highlighter-rouge&quot;&gt;factory function&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;define factory function:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;A function that returns base class pointer to a newly created derived class object 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Example:&lt;/p&gt;
+&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;TimeKeeper&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ptk&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getTimeKeeper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//dynamically allocated object, on the heap, from TimeKeeper hierachy &lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//use ptk here&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;delete&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ptk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//release to avoid resource leak &lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So the idea of factory function is that getTimeKeeper returns a pointer to a derived class object, for example AtomicClock.&lt;/p&gt;
+
+&lt;p&gt;Now, the problem is that getTimeKeeper returns a pointer to a derived class (AtomicClock) that object is being deleted via a base class pointer. a TimeKeeper* pointer, and the base class a non virtual destructor. =&amp;gt; DISASTER.&lt;/p&gt;
+
+&lt;p&gt;because C++ specifies that when a derived class object is deleted through a pointer to a base with a non virtual destructor, results are undefined. Usually, the derived part of the object never gets destroyed. i.e. AtomicClock object is not destroyed and destructor would not be run. However, the base class part (TimeKeeper part) would be destroyed, leading to a curious “partially destroyed” object. Excellent way to &lt;b&gt; leak resource &lt;/b&gt;, corrupt data structure &amp;amp; spend a lot of time with debuggers.&lt;/p&gt;
+
+&lt;p&gt;To fix the problem: 
+give the base class a virtual destructor. then deleteing the derived class object will be what you want. it will delete entire object with its derived class parts.&lt;/p&gt;
+
+&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TimeKeeper&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nl&quot;&gt;public:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;TimeKeeper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;virtual&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TimeKeeper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//note virtual keyword here&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;TimeKeeper&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ptk&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getTimeKeeper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;delete&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ptk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//behaves correctly now&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Base classes like TimeKeeper generally contain virtual functions other than destructor, because purpose of virtual function to allow customization of derived class implementation.&lt;/p&gt;
+
+&lt;p&gt;If a base class does not contain virtual function, often indicates it is not meant to be used as a bsae class.  If a class is not intended to be base class, making the destructor virtual is usually a bad idea.&lt;/p&gt;
+
+&lt;p&gt;Example:&lt;/p&gt;
+&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Point&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nl&quot;&gt;public:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;xCoord&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;yCoord&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+  &lt;span class=&quot;nl&quot;&gt;private:&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;if an int occupies 32 bit, Point object can typically fit into a 64 bit register. Point object can be passed as a 64 bit quantity. If Point destructor is virtual, situation changes. 
+Object of that that will increase in size, on a 32-bit architecture, they’ll go from 64bit ( for the 2 ints) to 96 bit ( ints + virtual pointer) virtual pointer is to determine which virtual function should invoke on the object. on a 64 bit architecture, they may go to 128 bit because pointers are 64 bits in size on such architecture. Adding a vptr to Point will increase 50-100%. Where Point can no longer fit 64 bit register.&lt;/p&gt;
+
+&lt;p&gt;Hence, it is gratuitiously declaring all destructors virtual is just as wrong as never declaring them virtual.&lt;/p&gt;
+
+&lt;p&gt;One good rule of thumb:
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Declare a virtual destructor only if you have at least one virtual function.&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;K.&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">Chapter 1, Item 7: Declare destructors virtual in polymorphic base classes. I’ve seen so many virtual keyword in c++ which you don’t quite see in other languages. So what is virtual ?</summary></entry><entry><title type="html">Effective C++ Series Item 6</title><link href="http://localhost:4000/2020-04-27/Effective-C++-Series-Item-6" rel="alternate" type="text/html" title="Effective C++ Series Item 6" /><published>2020-04-27T21:21:00+09:00</published><updated>2020-04-27T21:21:00+09:00</updated><id>http://localhost:4000/2020-04-27/Effective%20C++%20Series%20Item%206</id><content type="html" xml:base="http://localhost:4000/2020-04-27/Effective-C++-Series-Item-6">&lt;p&gt;Chapter 1, Item 6: Explicitly Disallow the User of Compiler-Generated Functions you do not want. &lt;br /&gt;
 From the previous chapter, you’ll know that C++ auto generates constructors when you don’t declare it.&lt;/p&gt;
 
 &lt;p&gt;However, what happens if you want to create unique objects? Read on to find out more.&lt;/p&gt;
